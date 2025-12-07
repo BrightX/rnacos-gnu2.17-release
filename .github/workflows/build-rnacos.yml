@@ -22,7 +22,7 @@ jobs:
       - name: Clone r-nacos repository
         uses: actions/checkout@v4
         with:
-          repository: https://github.com/nacos-group/r-nacos.git
+          repository: nacos-group/r-nacos
           ref: ${{ github.event.inputs.rnacosTag }}
           path: rnacos_root
 
