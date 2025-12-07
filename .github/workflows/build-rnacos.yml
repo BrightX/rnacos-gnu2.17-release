@@ -28,7 +28,7 @@ jobs:
 
       - uses: brightx/rust-gnu2.17-action@1.91
         with:
-          args: build --release --all-features
+          args: build --release --bins
           directory: rnacos_root
 
       - name: Archive binary
