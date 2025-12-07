@@ -1,0 +1,46 @@
+name: Build rnacos on gnu2.17 x86_64
+
+on:
+  workflow_dispatch:
+    inputs:
+      rnacosTag:
+        type: string
+        description: rnacos release tag
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: |
+          echo "RNACOS Tags: $RNACOS_TAG"
+          echo "RNACOS Tags: ${{ github.event.inputs.rnacosTag }}"
+        env:
+          RNACOS_TAG: ${{ inputs.rnacosTag }}
+
+      - name: Clone r-nacos repository
+        uses: actions/checkout@v4
+        with:
+          repository: https://github.com/nacos-group/r-nacos.git
+          ref: ${{ github.event.inputs.rnacosTag }}
+          path: rnacos_root
+
+      - uses: brightx/rust-gnu2.17-action@1.91
+        with:
+          args: build --release --all-features
+          directory: rnacos_root
+
+      - name: Archive binary
+        run: |
+          cd rnacos_root/target/release
+          cp ../../doc/conf/.env.example .env
+          tar czvf ../../../rnacos-x86_64-unknown-linux-gnu2.17-${{ github.event.inputs.rnacosTag }}.tar.gz rnacos .env
+          cd -
+      - name: Upload binary artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries rnacos gnu2.17 x86_64
+          path: |
+            *.tar.gz
+            *.zip
