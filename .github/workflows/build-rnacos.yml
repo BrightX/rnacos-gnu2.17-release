@@ -24,20 +24,20 @@ jobs:
         with:
           repository: nacos-group/r-nacos
           ref: ${{ github.event.inputs.rnacosTag }}
-          path: rnacos_root
+          path: r-nacos
 
       - uses: brightx/rust-gnu2.17-action@1.91
         with:
           args: build --release --bins
-          directory: rnacos_root
+          directory: r-nacos
 
       - name: Archive binary
         run: |
-          cd rnacos_root/target/release
+          cd r-nacos/target/x86_64-unknown-linux-gnu/release
           pwd
-          cp ../../doc/conf/.env.example .env
+          cp ../../../doc/conf/.env.example .env
           ls -alh
-          tar czvf ../../../rnacos-x86_64-unknown-linux-gnu2.17-${{ github.event.inputs.rnacosTag }}.tar.gz rnacos .env
+          tar czvf ../../../../rnacos-x86_64-unknown-linux-gnu2.17-${{ github.event.inputs.rnacosTag }}.tar.gz rnacos .env
           cd -
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v4
