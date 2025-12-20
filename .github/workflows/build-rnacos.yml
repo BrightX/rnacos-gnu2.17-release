@@ -33,6 +33,8 @@ jobs:
           cache-name: cache-cargo-registry
         with:
           path: |
+            .cargo/git
+            .cargo/registry
             ~/.cargo/git
             ~/.cargo/registry
             /opt/rust/cargo/git
