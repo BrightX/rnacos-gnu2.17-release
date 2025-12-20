@@ -26,6 +26,34 @@ jobs:
           ref: ${{ github.event.inputs.rnacosTag }}
           path: r-nacos
 
+      - name: Cache cargo registry
+        id: cache-cargo-registry
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-cargo-registry
+        with:
+          path: |
+            ~/.cargo/git
+            ~/.cargo/registry
+            /opt/rust/cargo/git
+            /opt/rust/cargo/registry
+          key: ${{ runner.os }}-registry-${{ env.cache-name }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-registry-${{ env.cache-name }}-
+            ${{ runner.os }}-registry-
+
+      - name: Cache cargo target
+        id: cache-cargo-target
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-cargo-target
+        with:
+          path: r-nacos/target
+          key: ${{ runner.os }}-target-${{ env.cache-name }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-target-${{ env.cache-name }}-
+            ${{ runner.os }}-target-
+
       - uses: brightx/rust-gnu2.17-action@1.91
         with:
           args: build --release --bins
